@@ -4,6 +4,10 @@ public class Cuenta {
 	private String titular;
 	private Double cantidad;
 	
+	public Cuenta ()
+	{
+		this.cantidad = 0D;
+	}
 	
 	public Cuenta (String titular, Double cantidad)
 	{
@@ -31,6 +35,7 @@ public class Cuenta {
 		this.cantidad = cantidad;
 	}
 
+	@Override
 	public String toString() 
 	{
 		return "Cuenta [titular =" + titular + ", cantidad =" + cantidad + "]";
