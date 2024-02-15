@@ -4,7 +4,7 @@ public class Persona {
 
 	private String nombre; 
 	private String fechaNacimiento;
-	private String id;
+	protected String id;
 	private Sexo sexo;
 	private Float peso;
 	private Float altura;
@@ -12,7 +12,7 @@ public class Persona {
 	public Persona () {
 		
 	}
-
+// Ocupar este constructor para los estuadiantes, no será necesario preguntarles peso ni altura
 	public Persona (String nombre, String fechaNacimiento, Sexo sexo) {
 		
 		this.nombre = nombre;
@@ -86,7 +86,7 @@ public class Persona {
 				", peso=" + peso + ", altura=" + altura + "]";
 	}
 	
-	private String generaId () {
+	protected String generaId () {
 	
 		Random aleatorio = new Random();
 		int numeroAleatorio = 0;

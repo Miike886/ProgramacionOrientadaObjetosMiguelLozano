@@ -1,5 +1,6 @@
 package udelp.edu.main;
 import udelp.edu.process.ProcesosPersona;
+import udelp.edu.validations.Validaciones;
 import udelp.edu.model.Persona;
 import udelp.edu.model.Persona.Sexo;
 import java.util.Scanner;
@@ -9,7 +10,7 @@ public class IndiceMasaCorporal {
 
 		Scanner leer = new Scanner (System.in);
 		ProcesosPersona procesos = new ProcesosPersona();
-
+		Validaciones validaciones = new Validaciones();
 		
 		String auxiliar, auxiliar2, opcion, nombre, fechaNacimiento, id;
 		Float peso, altura;
@@ -24,7 +25,7 @@ public class IndiceMasaCorporal {
 			{
 				opcion = leer.nextLine();
 
-				if (procesos.validaEntero(opcion))
+				if (validaciones.validaEntero(opcion))
 				{
 					opcionEntero = Integer.parseInt(opcion);
 					switch(opcionEntero)
@@ -42,7 +43,7 @@ public class IndiceMasaCorporal {
 								System.out.println("Ingresa la fecha de nacimiento (dd/mm/aaaa)");
 								fechaNacimiento = leer.nextLine();
 
-								if(procesos.validarFecha(fechaNacimiento))
+								if(validaciones.validarFecha(fechaNacimiento))
 								{	
 
 									do
@@ -50,7 +51,7 @@ public class IndiceMasaCorporal {
 										System.out.println("Ingresa el sexo: \n1) Hombre\n2) Mujer \n(Escribir solo el número)");
 										opcion = leer.nextLine();
 
-										if (procesos.validaEntero(opcion) && (Integer.parseInt(opcion) == 1 || Integer.parseInt(opcion) == 2))
+										if (validaciones.validaEntero(opcion) && (Integer.parseInt(opcion) == 1 || Integer.parseInt(opcion) == 2))
 										{
 											sexo = Integer.parseInt(opcion) == 1? Sexo.HOMBRE: Sexo.MUJER;
 
@@ -59,7 +60,7 @@ public class IndiceMasaCorporal {
 												System.out.println("Ingresa el peso en kilos (entre 15 y 250 kilos)");
 												auxiliar = leer.nextLine();
 
-												if (procesos.validaFlotante(auxiliar) && (Float.parseFloat(auxiliar) >= 15f && Float.parseFloat(auxiliar) <= 250f))
+												if (validaciones.validaFlotante(auxiliar) && (Float.parseFloat(auxiliar) >= 15f && Float.parseFloat(auxiliar) <= 250f))
 												{
 													peso = Float.parseFloat(auxiliar);
 
@@ -68,7 +69,7 @@ public class IndiceMasaCorporal {
 														System.out.println("Ingresa la altura en metros (entre 0.20 y 2.5 metros)");
 														auxiliar2 = leer.nextLine();
 
-														if (procesos.validaFlotante(auxiliar2) && (Float.parseFloat(auxiliar2) >= 0.5f && Float.parseFloat(auxiliar2) <= 2.5f))
+														if (validaciones.validaFlotante(auxiliar2) && (Float.parseFloat(auxiliar2) >= 0.5f && Float.parseFloat(auxiliar2) <= 2.5f))
 														{
 															altura = Float.parseFloat(auxiliar2);
 															Persona persona = new Persona (nombre, fechaNacimiento, sexo, peso, altura);
@@ -82,7 +83,7 @@ public class IndiceMasaCorporal {
 														}
 
 													}
-													while (!procesos.validaFlotante(auxiliar2) || (Float.parseFloat(auxiliar2) < 0.5  || Float.parseFloat(auxiliar2) > 2.5f));
+													while (!validaciones.validaFlotante(auxiliar2) || (Float.parseFloat(auxiliar2) < 0.5  || Float.parseFloat(auxiliar2) > 2.5f));
 												}
 
 												else
@@ -90,7 +91,7 @@ public class IndiceMasaCorporal {
 													System.out.println("Ingresa un peso válido en el rango establecido");
 												}
 
-											} while (!procesos.validaFlotante(auxiliar) || (Float.parseFloat(auxiliar) < 15f || Float.parseFloat(auxiliar) > 250f));
+											} while (!validaciones.validaFlotante(auxiliar) || (Float.parseFloat(auxiliar) < 15f || Float.parseFloat(auxiliar) > 250f));
 
 										}
 
@@ -100,14 +101,14 @@ public class IndiceMasaCorporal {
 										}
 
 									}
-									while(!procesos.validaEntero(opcion) || !(Integer.parseInt(opcion) == 1 || Integer.parseInt(opcion) == 2));
+									while(!validaciones.validaEntero(opcion) || !(Integer.parseInt(opcion) == 1 || Integer.parseInt(opcion) == 2));
 
 								}
 								else
 								{
 									System.out.println("Ingresa una fecha de nacimiento válida, ¡Intenta de nuevo!");
 								}
-							} while (!procesos.validarFecha(fechaNacimiento));
+							} while (!validaciones.validarFecha(fechaNacimiento));
 						}
 						else
 						{
@@ -184,7 +185,7 @@ public class IndiceMasaCorporal {
 				{
 					System.out.println("El valor ingresado debe ser un número entero");
 				}
-			} while (!procesos.validaEntero(opcion));
+			} while (!validaciones.validaEntero(opcion));
 
 		}while(repetir);
 

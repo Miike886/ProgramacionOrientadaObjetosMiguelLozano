@@ -4,12 +4,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import udelp.edu.model.Persona;
+import udelp.edu.validations.Validaciones;
 
 public class ProcesosPersona {
 
 	public ArrayList<Persona> listaPersonas = new ArrayList<Persona> ();
+	Validaciones validaciones = new Validaciones();
 	
-	private String formatearFecha (String fecha)
+	public String formatearFecha (String fecha)
 	{
 		String fechaFormateada;
 		try
@@ -35,14 +37,14 @@ public class ProcesosPersona {
 		return fechaFormateada;
 	}
 
-	private Integer calcularEdad (Persona persona)
+	Integer calcularEdad (Persona persona)
 	{
 		Integer edad = -1;
 		LocalDate fechaHoy = LocalDate.now();
 		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		
 	
-		if (validarFecha(persona.getFechaNacimiento()))
+		if (validaciones.validarFecha(persona.getFechaNacimiento()))
 		{
 			String fechaNacimiento = persona.getFechaNacimiento();
 			String fechaActual = fechaHoy.format(formatoFecha);
@@ -52,7 +54,7 @@ public class ProcesosPersona {
 			Integer añoActual = Integer.parseInt(fechaActual.split("/")[2]), mesActual = Integer.parseInt(fechaActual.split("/")[1]), diaActual = Integer.parseInt(fechaActual.split("/")[0]);
 			
 
-			if (validarFecha(fechaNacimiento))
+			if (validaciones.validarFecha(fechaNacimiento))
 			{
 				edad = añoActual - añoNacimiento;
 
@@ -144,6 +146,9 @@ public class ProcesosPersona {
 		{
 			cadena += listaPersonas.get(i).getId() + "\t \t" + listaPersonas.get(i).getNombre() + "\t \t" + calcularEdad(listaPersonas.get(i)) + "\t \t" + esMayorDeEdad(listaPersonas.get(i)) + "\t \t"; 
 			
+			
+			
+			
 			imc = calcularIMC(listaPersonas.get(i));
 			if (imc == 0)
 			{
@@ -172,87 +177,5 @@ public class ProcesosPersona {
 		return cadena;
 	}
 	
-	public Boolean validarFecha (String fecha)
-	{
-		formatearFecha(fecha);
-		
-		boolean comprobacion = false;
-		try
-		{
-			Integer año = Integer.parseInt(fecha.split("/")[2]), mes = Integer.parseInt(fecha.split("/")[1]), dia = Integer.parseInt(fecha.split("/")[0]);
-			
-			if ((año < 1900) | (año > 2024))
-			{
-				return false;
-			}
 
-
-			if ((mes == 01) | (mes == 03) | (mes == 05) | (mes == 07) | (mes == 8) | (mes == 10) | (mes == 12))
-			{
-				if ((dia >= 01) && (dia <= 31))
-				{
-					comprobacion = true;
-				}
-
-			}
-			else if ((mes == 04) | (mes == 06) | (mes == 9) | (mes == 11))
-			{
-				if (dia >= 01 && dia <= 30)
-				{
-					comprobacion = true;
-				}
-			}
-			else if (mes == 02)
-			{
-				if ((año >= 1900) && (año <=2024))
-				{	
-					if ((año % 4) == 0)
-					{
-						if (dia >= 01 && dia <= 29)
-						{
-							comprobacion = true;
-						}
-					}
-					else 
-					{
-						if ((dia >= 01) && (dia <= 28))	
-						{
-							comprobacion = true;
-						}
-					}
-				}	   	
-			}		 	
-		} 
-		catch (Exception ex)
-		{
-			comprobacion = false;
-		}
-		return comprobacion;
-	}
-	
-	public boolean validaEntero (String numero)
-	{
-		try 
-		{
-			Integer.parseInt(numero);
-			return true;
-		}
-		catch (Exception ex)
-		{
-			return false;
-		}
-	}
-	
-	public boolean validaFlotante (String numero)
-	{
-		try 
-		{
-			Float.parseFloat(numero);
-			return true;
-		}
-		catch (Exception ex)
-		{
-			return false;
-		}
-	}
 }
