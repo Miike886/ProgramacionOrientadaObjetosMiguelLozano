@@ -7,13 +7,15 @@ public class MateriaAlumno extends Materia {
 	private Double segundoParcial;
 	private Double proyecto;
 	private Double examenFinal;
+	private String idMateria;
 	
-	public MateriaAlumno(String semestre, String horario, String nombre, Carrera carrera) {
+	public MateriaAlumno(String semestre, String horario, String nombre, Carrera carrera, String id) {
 		super(semestre, horario, nombre, carrera);
 		primerParcial = null;
 		segundoParcial = null;
 		proyecto = null; 
 		examenFinal = null;
+		this.idMateria = id;
 	}
 	
 	public Double getPrimerParcial() {
@@ -34,6 +36,14 @@ public class MateriaAlumno extends Materia {
 	public void setProyecto(Double proyecto) {
 		this.proyecto = proyecto;
 	}
+	public String getIdMateria() {
+		return idMateria;
+	}
+
+	public void setIdMateria(String idMateria) {
+		this.idMateria = idMateria;
+	}
+
 	public Double getExamenFinal() {
 		return examenFinal;
 	}

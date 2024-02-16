@@ -43,6 +43,21 @@ public class Validaciones {
 		return validacion;
 	}
 
+	public boolean validaCalificacion (String calificacion) { 
+
+		boolean validacion = false;
+
+		if (validaFlotante(calificacion))
+		{
+			if (Double.parseDouble(calificacion) >= 0 && Double.parseDouble(calificacion) <= 10)
+			{
+				validacion = true;
+			}
+		}
+
+		return validacion;
+	}
+
 	public boolean validaHorario(String horario) {
 
 		boolean validacion = false;

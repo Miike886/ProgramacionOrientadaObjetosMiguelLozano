@@ -3,6 +3,7 @@ package udelp.edu.main;
 import java.util.Scanner;
 
 import udelp.edu.model.Carrera;
+import udelp.edu.model.Estudiante;
 import udelp.edu.model.Materia;
 import udelp.edu.model.Persona;
 import udelp.edu.model.Persona.Sexo;
@@ -20,11 +21,11 @@ public class ControlEscolar {
 		
 		ProcesosControlEscolar funciones = new ProcesosControlEscolar();
 		
-		String auxiliar, opcion, nombre, fechaNacimiento, id, semestre, horario, nombreCarrera, generacion;
+		String auxiliar, opcion, nombre, fechaNacimiento, id, semestre, horario, nombreCarrera, generacion, calificacion;
 		
 		boolean repetir = true, salir = false;
 		Sexo sexo;
-		int opcionEntero;
+		int opcionEntero, opcionCalificacion = 0;
 
 		do
 		{
@@ -231,7 +232,7 @@ public class ControlEscolar {
 							do
 							{
 								
-								System.out.println("Selecionaste asignar carrera a alumno\nIngresa el id de la materia a asignar:\n" + funciones.mostrarMaterias());
+								System.out.println("Selecionaste materia a profesor\nIngresa el id de la materia a asignar:\n" + funciones.mostrarMaterias());
 								id = leer.nextLine();
 								
 								if (funciones.buscarMateriaPorId(id) == -1)
@@ -302,7 +303,7 @@ public class ControlEscolar {
 										System.out.println("Ingresa el nombre de la carrera:\n" + funciones.mostrarCarreras());
 										auxiliar = leer.nextLine().toUpperCase();
 										
-										if (funciones.buscarCarreraPorNombre(auxiliar).getNombre() == null)
+										if (null == funciones.buscarCarreraPorNombre(auxiliar).getNombre())
 										{
 											System.out.println("No se ha encontrado una carrera con dicho nombre, ¡Intenta de nuevo!");
 										}
@@ -331,6 +332,78 @@ public class ControlEscolar {
 						break;
 					
 					case 7:
+						salir = false;
+						System.out.println("Seleccionaste agregar calificación");
+						if (funciones.listaEstudiantes.size() == 0 || funciones.listaCarreras.size() == 0 || funciones.listaMaterias.size() == 0)
+						{
+							System.out.println("Para poner una calificación debes haber asignado una carrera con al menos una materia a un estudiante");
+						}
+						else
+						{
+							do
+							{
+								System.out.println("Ingresa el id del estudiante a asignar:\n" + funciones.mostrarGeneralEstudiantes());
+								id = leer.nextLine();
+								
+								if (funciones.buscarEstudiantePorId(id) == -1)
+								{
+									System.out.println("No se ha encontrado una estudiante con dicho id, ¡Intenta de nuevo!");
+								}
+								else
+								{
+									do
+									{
+										System.out.println("Ingresa el id de la Materia:\n" + funciones.mostrarMateriasEstudiante(funciones.listaEstudiantes.get(funciones.buscarEstudiantePorId(id))));
+										auxiliar = leer.nextLine();
+										
+										if (funciones.buscarMateriaPorId(auxiliar) == -1)
+										{
+											System.out.println("No se ha encontrado una materia con dicho id, ¡Intenta de nuevo!");
+										}
+										else
+										{	
+											do
+											{
+												System.out.println("Selecciona el tipo de calificación que deseas asignar:\n1) Primer parcial\n2) Segundo parcial\n3) Proyecto\n4)Examen Final");
+												opcion = leer.nextLine();
+
+												if (validaciones.validaEntero(opcion))
+												{
+													opcionCalificacion = Integer.parseInt(opcion);
+													
+													do
+													{
+														System.out.println("Escribe la calificación:");
+														calificacion = leer.nextLine();
+
+														if (validaciones.validaCalificacion(calificacion))
+														{
+															funciones.agregarCalificacion(funciones.listaEstudiantes.get(funciones.buscarEstudiantePorId(id)), funciones.listaMaterias.get(funciones.buscarMateriaPorId(auxiliar)), Double.parseDouble(calificacion), opcionCalificacion);
+															System.out.println("Calificación agregada con éxito\n" + funciones.mostrarEstudianteCompleto(funciones.listaEstudiantes.get(funciones.buscarEstudiantePorId(id))));
+															
+															salir = true;
+														}
+														else
+														{
+															System.out.println("Debes ingresar una opción valida en el rango establecido");
+														}
+													} while (opcionCalificacion < 1 || opcionCalificacion > 4 );
+												}
+												else
+												{
+													System.out.println("Debes ingresar una opción valida en el rango establecido");
+												}
+											} while (opcionCalificacion < 1 || opcionCalificacion > 4 );
+										}
+										
+									} while (!salir);
+								}
+								
+							} while (!salir);
+							
+						}
+						break;
+					
 						
 						
 						
@@ -363,6 +436,156 @@ public class ControlEscolar {
 						}
 						
 						break;
+						
+					case 9:
+
+						salir = false;
+						System.out.println("Seleccionaste sacar el promedio de un alumno en una materia");
+						
+							do
+							{
+								System.out.println("Ingresa el id del estudiante a promediar:\n" + funciones.mostrarGeneralEstudiantes());
+								id = leer.nextLine();
+								
+								if (funciones.buscarEstudiantePorId(id) == -1)
+								{
+									System.out.println("No se ha encontrado una estudiante con dicho id, ¡Intenta de nuevo!");
+								}
+								else
+								{
+									do
+									{
+										System.out.println("Ingresa el id de la Materia:\n" + funciones.mostrarMateriasEstudiante(funciones.listaEstudiantes.get(funciones.buscarEstudiantePorId(id))));
+										auxiliar = leer.nextLine();
+										
+										if (funciones.buscarMateriaPorId(auxiliar) == -1)
+										{
+											System.out.println("No se ha encontrado una materia con dicho id, ¡Intenta de nuevo!");
+										}
+										else
+										{	
+											
+											if (funciones.validaExistenCalificaciones(funciones.listaEstudiantes.get(funciones.buscarEstudiantePorId(id)), funciones.listaMaterias.get(funciones.buscarMateriaAlumnoPorId(auxiliar, funciones.listaEstudiantes.get(funciones.buscarEstudiantePorId(id))))))
+											{
+												Estudiante estudiante = funciones.listaEstudiantes.get(funciones.buscarEstudiantePorId(id));
+												Materia materia = funciones.listaMaterias.get(funciones.buscarMateriaAlumnoPorId(auxiliar, estudiante));
+
+												double promedio = funciones.calcularPromedioMateria(estudiante, materia);
+												System.out.println("El promedio es: " + promedio);
+												salir = true;
+											}
+
+											else
+											{
+												System.out.println("Aún no se han asignado todas las calificaciones para sacar el promedio");
+												salir = true;
+											}
+											
+										}
+										
+									} while (!salir);
+								}
+								
+							} while (!salir);
+							
+							break;
+					
+					case 10:
+
+						salir = false;
+						System.out.println("Seleccionaste obtener promedio del alumno");
+
+						do
+						{
+							System.out.println("Ingresa el id del estudiante a promediar:\n" + funciones.mostrarGeneralEstudiantes());
+							id = leer.nextLine();
+
+							if (funciones.buscarEstudiantePorId(id) == -1)
+							{
+								System.out.println("No se ha encontrado una estudiante con dicho id, ¡Intenta de nuevo!");
+							}
+							else
+							{
+
+								Estudiante estudiante = funciones.listaEstudiantes.get(funciones.buscarEstudiantePorId(id));
+
+								double promedio = funciones.calcularPromedioEstudiante(estudiante);
+								System.out.println("El promedio del estudiante es: " + promedio);
+								salir = true;
+							}
+
+
+
+						} while (!salir);
+
+						break;
+
+					case 11:
+					    salir = false;
+					    System.out.println("Seleccionaste obtener promedio del semestre de alumnos de una carrera");
+
+					    do {
+					        System.out.println("Ingresa el nombre de la carrera:" + funciones.mostrarCarreras());
+					        nombreCarrera = leer.nextLine();
+					        Carrera carrera = funciones.buscarCarreraPorNombre(nombreCarrera);
+
+					        if (carrera == null) {
+					            System.out.println("No se ha encontrado una carrera con ese nombre, ¡Intenta de nuevo!");
+					        } else {
+					            System.out.println("Ingresa el número de semestre:");
+					            semestre = leer.nextLine();
+
+					            double promedio = funciones.calcularPromedioSemestreCarrera(carrera, Integer.parseInt(semestre));
+					            System.out.println("El promedio del semestre " + semestre + " de la carrera " + nombreCarrera + " es: " + promedio);
+					            salir = true;
+					        }
+					    } while (!salir);
+					    break;
+
+					case 12:
+					    salir = false;
+					    System.out.println("Seleccionaste obtener promedio por materia de una carrera en un semestre");
+
+					    do {
+					        System.out.println("Ingresa el nombre de la carrera:\n" + funciones.mostrarCarreras());
+					        nombreCarrera = leer.nextLine().toUpperCase();
+					        Carrera carrera = funciones.buscarCarreraPorNombre(nombreCarrera);
+
+					        if (carrera == null) {
+					            System.out.println("No se ha encontrado una carrera con ese nombre, ¡Intenta de nuevo!");
+					        } else {
+					            System.out.println("Ingresa el número de semestre:");
+					            semestre = leer.nextLine();
+
+					            System.out.println("Ingresa el ID de la materia:\n" + funciones.mostrarMaterias());
+					            String idMateria = leer.nextLine();
+
+					            double promedio = funciones.calcularPromedioMateriaCarrera(carrera, Integer.parseInt(semestre), idMateria);
+					            System.out.println("El promedio de la materia con ID " + idMateria + " en el semestre " + semestre + " de la carrera " + nombreCarrera + " es: " + promedio);
+					            salir = true;
+					        }
+					    } while (!salir);
+					    break;
+
+					case 13:
+					    salir = false;
+					    System.out.println("Seleccionaste obtener promedio por carrera");
+
+					    do {
+					        System.out.println("Ingresa el nombre de la carrera:\n" + funciones.mostrarCarreras());
+					        nombreCarrera = leer.nextLine().toUpperCase();
+					        Carrera carrera = funciones.buscarCarreraPorNombre(nombreCarrera);
+
+					        if (carrera == null) {
+					            System.out.println("No se ha encontrado una carrera con ese nombre, ¡Intenta de nuevo!");
+					        } else {
+					            double promedio = funciones.calcularPromedioCarrera(carrera);
+					            System.out.println("El promedio de la carrera " + nombreCarrera + " es: " + promedio);
+					            salir = true;
+					        }
+					    } while (!salir);
+					    break;
+					
 					case 14:
 						System.out.println("Saliendo del programa");
 						repetir = false;

@@ -30,6 +30,18 @@ public class ProcesosControlEscolar {
 		 return -1;
 	}
 	
+	public Integer buscarMateriaAlumnoPorId (String id, Estudiante estudiante) {
+
+		for (int i = 0; i < estudiante.getMaterias().size(); i++)
+		{
+			if (estudiante.getMaterias().get(i).getIdMateria().equals(id))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	public Integer buscarProfesorPorId (String id) {
 		
 		for (int i = 0; i < listaProfesores.size(); i++)
@@ -54,17 +66,7 @@ public class ProcesosControlEscolar {
 		 return -1;
 	}
 
-	private int buscarPorMateria (Estudiante estudiante, Materia materia) {
-
-		for (int i = 0; i < estudiante.getMaterias().size(); i++)
-		{
-			if (estudiante.getMaterias().get(i).equals(materia))
-			{
-				return i;
-			}
-		}
-		return -1;
-	}
+	
 
 	private void asignarMateriasEstudiante (Estudiante estudiante, Carrera carrera) {
 		
@@ -76,7 +78,8 @@ public class ProcesosControlEscolar {
 		{
 			if (Integer.parseInt(carrera.getMaterias().get(i).getSemestre()) == (estudiante.getSemestre()))
 			{
-				MateriaAlumno materiaAlumno = new MateriaAlumno(carrera.getMaterias().get(i).getSemestre(), carrera.getMaterias().get(i).getHorario(), carrera.getMaterias().get(i).getNombre(), carrera.getMaterias().get(i).getCarrera());
+				MateriaAlumno materiaAlumno = new MateriaAlumno(carrera.getMaterias().get(i).getSemestre(), carrera.getMaterias().get(i).getHorario(), carrera.getMaterias().get(i).getNombre(), carrera.getMaterias().get(i).getCarrera(), carrera.getMaterias().get(i).getId());
+				
 				listaMaterias.add(materiaAlumno);
 			}
 		}
@@ -127,7 +130,7 @@ public class ProcesosControlEscolar {
 
 	public void agregarCalificacion (Estudiante estudiante, Materia materia, Double calificacion, int opcion) {
 		
-		int indice = buscarPorMateria(estudiante, materia);
+		int indice = buscarMateriaAlumnoPorId(materia.getId(), estudiante);
 		
 		switch (opcion)
 		{
@@ -154,6 +157,7 @@ public class ProcesosControlEscolar {
 		}
 		
 	}
+
 	
 	public String mostrarDatosEstudiante (Estudiante estudiante) {
 		
@@ -165,47 +169,105 @@ public class ProcesosControlEscolar {
 		return cadena;
 	}
 	
-	public Double calcularPromedioMateria (Estudiante estudiante, MateriaAlumno materia) {
-		
-		int indice = buscarPorMateria(estudiante, materia);
-		
+	public Double calcularPromedioMateria (Estudiante estudiante, Materia materia) {
+
+		int indice = buscarMateriaAlumnoPorId(materia.getId(), estudiante);
+
 		Double promedio = (estudiante.getMaterias().get(indice).getPrimerParcial() + estudiante.getMaterias().get(indice).getSegundoParcial() 
 				+ estudiante.getMaterias().get(indice).getProyecto() + estudiante.getMaterias().get(indice).getExamenFinal()) / 4; 
-		
-		return promedio;
-	}
-	
-	public Double calcularPromedioEstudiante (Estudiante estudiante) {
-		
-		Double promedio = 0D;
-		
-		for (int i = 0; i < estudiante.getMaterias().size(); i++)
-		{
-			promedio += calcularPromedioMateria(estudiante, estudiante.getMaterias().get(i));
-		}
-		
-		promedio = promedio / estudiante.getMaterias().size();
-		return promedio;
-	}
-	
-	public Double calcularPromedioSemestreCarrera (Carrera carrera, Integer semestre) {
-		
-		Double promedio = 0D;
-		int contadorAlumnos = 0;
-		
-		for (int i = 0; i < listaEstudiantes.size(); i++)
-		{
-			if (listaEstudiantes.get(i).getCarrera() == carrera && listaEstudiantes.get(i).getSemestre() == semestre)
-			{
-				promedio += calcularPromedioEstudiante(listaEstudiantes.get(i));
-				contadorAlumnos++;
-			}
-		}
 
-		promedio = promedio / contadorAlumnos;
 		return promedio;
 	}
+
 	
+	public Double calcularPromedioEstudiante(Estudiante estudiante) {
+		
+	    Double promedio = 0.0;
+
+	    if (!estudiante.getMaterias().isEmpty()) 
+	    {
+	        for (int i = 0; i < estudiante.getMaterias().size(); i++) 
+	        {
+	            MateriaAlumno materiaAlumno = estudiante.getMaterias().get(i);
+	            String materiaId = materiaAlumno.getIdMateria();
+	            int materiaIndex = buscarMateriaPorId(materiaId); 
+	            if (materiaIndex != -1) 
+	            {
+	                Materia materia = listaMaterias.get(materiaIndex);
+	                promedio += calcularPromedioMateria(estudiante, materia);
+	            } 
+	            else 
+	            {
+	                System.out.println("No se encontró la materia con ID: " + materiaId);
+	            }
+	        }
+
+	        promedio = promedio / estudiante.getMaterias().size();
+	    }
+
+	    return promedio;
+	}
+	
+	
+	public Double calcularPromedioSemestreCarrera(Carrera carrera, Integer semestre) {
+	    Double promedio = 0D;
+	    int contadorAlumnos = 0;
+
+	    for (Estudiante estudiante : listaEstudiantes) {
+	        if (estudiante.getCarrera().equals(carrera) && estudiante.getSemestre() == semestre) {
+	            promedio += calcularPromedioEstudiante(estudiante);
+	            contadorAlumnos++;
+	        }
+	    }
+
+	    if (contadorAlumnos != 0) {
+	        promedio = promedio / contadorAlumnos;
+	    }
+	    
+	    return promedio;
+	}
+	
+	public Double calcularPromedioMateriaCarrera(Carrera carrera, Integer semestre, String idMateria) {
+	    Double promedio = 0D;
+	    int contadorMaterias = 0;
+
+	    for (Estudiante estudiante : listaEstudiantes) {
+	        if (estudiante.getCarrera().equals(carrera) && estudiante.getSemestre() == semestre) {
+	            for (Materia materia : estudiante.getMaterias()) {
+	                if (materia.getId().equals(idMateria)) {
+	                    promedio += calcularPromedioMateria(estudiante, materia);
+	                    contadorMaterias++;
+	                }
+	            }
+	        }
+	    }
+
+	    if (contadorMaterias != 0) {
+	        promedio = promedio / contadorMaterias;
+	    }
+	    
+	    return promedio;
+	}
+
+	public Double calcularPromedioCarrera(Carrera carrera) {
+	    Double promedio = 0D;
+	    int contadorAlumnos = 0;
+
+	    for (Estudiante estudiante : listaEstudiantes) {
+	        if (estudiante.getCarrera().equals(carrera)) {
+	            promedio += calcularPromedioEstudiante(estudiante);
+	            contadorAlumnos++;
+	        }
+	    }
+
+	    if (contadorAlumnos != 0) {
+	        promedio = promedio / contadorAlumnos;
+	    }
+	    
+	    return promedio;
+	}
+
+
 	public String mostrarMaterias () {
 
 		String cadena = "Id\t|\tNombre de materia\t|\tSemestre\t|\tHorario\t|\tCarrera\n";
@@ -262,6 +324,7 @@ public class ProcesosControlEscolar {
 		
 		String cadena = "Id\t|\tNombre\t|\tEdad\t|\tSexo\t|\tSemestre\t|\tGeneracion\t|\tCarrera\n";
 		
+		
 			cadena += estudiante.getId() + "\t \t" + estudiante.getNombre() + "\t \t" 
 					 + funcion.calcularEdad(estudiante) + "\t \t" + estudiante.getSexo() + "\t \t"
 					 + estudiante.getSemestre() + "\t \t" + estudiante.getGeneracion() + "\t \t" 
@@ -273,11 +336,13 @@ public class ProcesosControlEscolar {
 	
 	public String mostrarMateriasEstudiante (Estudiante estudiante) {
 
-		String cadena = "Materias\nNombre\t|\tCarrera\t|\tSemestre\t|\tHorario\t|\tPrimer Parcial\t|\tSegundo Parcial\t|\tProyecto\t|\tExamen Final\n";
+		String cadena = "Materias\nId\t|\tNombre\t|\tCarrera\t|\tSemestre\t|\tHorario\t|\tPrimer Parcial\t|\tSegundo Parcial\t|\tProyecto\t|\tExamen Final\n";
 
 		for (int i = 0; i < estudiante.getMaterias().size(); i++) 
 		{
-			cadena += estudiante.getMaterias().get(i).getNombre() + "\t \t" + estudiante.getMaterias().get(i).getCarrera().getNombre() + "\t \t" 
+			
+			
+			cadena += estudiante.getMaterias().get(i).getIdMateria() + "\t \t" + estudiante.getMaterias().get(i).getNombre() + "\t \t" + estudiante.getMaterias().get(i).getCarrera().getNombre() + "\t \t" 
 					 + estudiante.getMaterias().get(i).getSemestre() + "\t \t" + estudiante.getMaterias().get(i).getHorario() + "\t \t" 
 					 + estudiante.getMaterias().get(i).getPrimerParcial() + "\t \t" + estudiante.getMaterias().get(i).getSegundoParcial() + "\t \t" 
 					 + estudiante.getMaterias().get(i).getProyecto() + "\t \t" + estudiante.getMaterias().get(i).getExamenFinal() + "\n";
@@ -324,6 +389,29 @@ public class ProcesosControlEscolar {
 		}
 		return validacion;
 	}
+	
+	public boolean validaExistenCalificaciones(Estudiante estudiante, Materia materia) {
+	    if (estudiante == null || materia == null) {
+	        return false; 
+	    }
+
+	    int indiceMateria = buscarMateriaAlumnoPorId(materia.getId(), estudiante);
+	    if (indiceMateria == -1) {
+	        return false; 
+	    }
+
+	   
+	    if (estudiante.getMaterias().get(indiceMateria).getPrimerParcial() == null ||
+	        estudiante.getMaterias().get(indiceMateria).getSegundoParcial() == null ||
+	        estudiante.getMaterias().get(indiceMateria).getProyecto() == null ||
+	        estudiante.getMaterias().get(indiceMateria).getExamenFinal() == null) {
+	        return false;
+	    }
+
+	    return true; 
+	}
+
+
 	
 	public boolean validaCarreraAsignada (Estudiante estudiante) {
 
