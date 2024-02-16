@@ -37,6 +37,180 @@ public class ProcesosPersona {
 		return fechaFormateada;
 	}
 
+	public Boolean validarFecha (String fecha) {
+
+		formatearFecha(fecha);
+
+		boolean comprobacion = false;
+		try
+		{
+			Integer año = Integer.parseInt(fecha.split("/")[2]), mes = Integer.parseInt(fecha.split("/")[1]), dia = Integer.parseInt(fecha.split("/")[0]);
+
+			if ((año < 1900) | (año > 2024))
+			{
+				return false;
+			}
+
+
+			if ((mes == 01) | (mes == 03) | (mes == 05) | (mes == 07) | (mes == 8) | (mes == 10) | (mes == 12))
+			{
+				if ((dia >= 01) && (dia <= 31))
+				{
+					comprobacion = true;
+				}
+
+			}
+			else if ((mes == 04) | (mes == 06) | (mes == 9) | (mes == 11))
+			{
+				if (dia >= 01 && dia <= 30)
+				{
+					comprobacion = true;
+				}
+			}
+			else if (mes == 02)
+			{
+				if ((año >= 1900) && (año <=2024))
+				{	
+					if ((año % 4) == 0)
+					{
+						if (dia >= 01 && dia <= 29)
+						{
+							comprobacion = true;
+						}
+					}
+					else 
+					{
+						if ((dia >= 01) && (dia <= 28))	
+						{
+							comprobacion = true;
+						}
+					}
+				}	   	
+			}		 	
+		} 
+		catch (Exception ex)
+		{
+			comprobacion = false;
+		}
+		return comprobacion;
+	}
+	
+	public Boolean validarFechaMaestro (String fecha) {
+
+		formatearFecha(fecha);
+
+		boolean comprobacion = false;
+		try
+		{
+			Integer año = Integer.parseInt(fecha.split("/")[2]), mes = Integer.parseInt(fecha.split("/")[1]), dia = Integer.parseInt(fecha.split("/")[0]);
+
+			if ((año < 1924) | (año > 2005))
+			{
+				return false;
+			}
+
+
+			if ((mes == 01) | (mes == 03) | (mes == 05) | (mes == 07) | (mes == 8) | (mes == 10) | (mes == 12))
+			{
+				if ((dia >= 01) && (dia <= 31))
+				{
+					comprobacion = true;
+				}
+
+			}
+			else if ((mes == 04) | (mes == 06) | (mes == 9) | (mes == 11))
+			{
+				if (dia >= 01 && dia <= 30)
+				{
+					comprobacion = true;
+				}
+			}
+			else if (mes == 02)
+			{
+				if ((año >= 1924) && (año <=2005))
+				{	
+					if ((año % 4) == 0)
+					{
+						if (dia >= 01 && dia <= 29)
+						{
+							comprobacion = true;
+						}
+					}
+					else 
+					{
+						if ((dia >= 01) && (dia <= 28))	
+						{
+							comprobacion = true;
+						}
+					}
+				}	   	
+			}		 	
+		} 
+		catch (Exception ex)
+		{
+			comprobacion = false;
+		}
+		return comprobacion;
+	}
+	
+	public Boolean validarFechaAlumno (String fecha) {
+
+		formatearFecha(fecha);
+
+		boolean comprobacion = false;
+		try
+		{
+			Integer año = Integer.parseInt(fecha.split("/")[2]), mes = Integer.parseInt(fecha.split("/")[1]), dia = Integer.parseInt(fecha.split("/")[0]);
+
+			if ((año < 1934) | (año > 2007))
+			{
+				return false;
+			}
+
+
+			if ((mes == 01) | (mes == 03) | (mes == 05) | (mes == 07) | (mes == 8) | (mes == 10) | (mes == 12))
+			{
+				if ((dia >= 01) && (dia <= 31))
+				{
+					comprobacion = true;
+				}
+
+			}
+			else if ((mes == 04) | (mes == 06) | (mes == 9) | (mes == 11))
+			{
+				if (dia >= 01 && dia <= 30)
+				{
+					comprobacion = true;
+				}
+			}
+			else if (mes == 02)
+			{
+				if ((año < 1934) | (año > 2007))
+				{	
+					if ((año % 4) == 0)
+					{
+						if (dia >= 01 && dia <= 29)
+						{
+							comprobacion = true;
+						}
+					}
+					else 
+					{
+						if ((dia >= 01) && (dia <= 28))	
+						{
+							comprobacion = true;
+						}
+					}
+				}	   	
+			}		 	
+		} 
+		catch (Exception ex)
+		{
+			comprobacion = false;
+		}
+		return comprobacion;
+	}
+
 	Integer calcularEdad (Persona persona)
 	{
 		Integer edad = -1;
@@ -44,7 +218,7 @@ public class ProcesosPersona {
 		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		
 	
-		if (validaciones.validarFecha(persona.getFechaNacimiento()))
+		if (validarFecha(persona.getFechaNacimiento()))
 		{
 			String fechaNacimiento = persona.getFechaNacimiento();
 			String fechaActual = fechaHoy.format(formatoFecha);
@@ -54,7 +228,7 @@ public class ProcesosPersona {
 			Integer añoActual = Integer.parseInt(fechaActual.split("/")[2]), mesActual = Integer.parseInt(fechaActual.split("/")[1]), diaActual = Integer.parseInt(fechaActual.split("/")[0]);
 			
 
-			if (validaciones.validarFecha(fechaNacimiento))
+			if (validarFecha(fechaNacimiento))
 			{
 				edad = añoActual - añoNacimiento;
 

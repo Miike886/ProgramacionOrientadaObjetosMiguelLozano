@@ -10,11 +10,11 @@ public class Estudiante extends Persona {
 	private String generacion;
 	private Carrera carrera;
 	
-	public Estudiante (String nombre, String fechaNacimiento, Sexo sexo) {
+	public Estudiante (String nombre, String fechaNacimiento, Sexo sexo, Integer semestre, String generacion) {
 		super(nombre, fechaNacimiento, sexo);
 		this.materias = new ArrayList<MateriaAlumno>();
-		semestre = null; 
-		generacion = null;
+		this.semestre = semestre; 
+		this.generacion = generacion;
 		carrera = null;
 		id = generaId();
 	}

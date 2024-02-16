@@ -43,7 +43,7 @@ public class IndiceMasaCorporal {
 								System.out.println("Ingresa la fecha de nacimiento (dd/mm/aaaa)");
 								fechaNacimiento = leer.nextLine();
 
-								if(validaciones.validarFecha(fechaNacimiento))
+								if(procesos.validarFecha(fechaNacimiento))
 								{	
 
 									do
@@ -108,7 +108,7 @@ public class IndiceMasaCorporal {
 								{
 									System.out.println("Ingresa una fecha de nacimiento válida, ¡Intenta de nuevo!");
 								}
-							} while (!validaciones.validarFecha(fechaNacimiento));
+							} while (!procesos.validarFecha(fechaNacimiento));
 						}
 						else
 						{

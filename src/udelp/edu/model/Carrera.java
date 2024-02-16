@@ -1,23 +1,25 @@
 package udelp.edu.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Carrera {
 
-	private String carrera;
+	private String nombre;
 	private List<Materia> materias;
 	
 	public Carrera (String carrera) {
 		
-		this.carrera = carrera;
+		this.nombre = carrera;
+		materias = new ArrayList<Materia>();
 	}
 	
-	public String getCarrera() {
-		return carrera;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setCarrera(String carrera) {
-		this.carrera = carrera;
+	public void setNombre(String carrera) {
+		this.nombre = carrera;
 	}
 	
 	public List<Materia> getMaterias() {
